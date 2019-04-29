@@ -3,10 +3,12 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:1b3db584a7747f84ef87b17dfe03fd6363ea12c2478f2e3cbe21fb3f4c7eaa0b"
+  digest = "1:d97da635a32086114273b0102e13861b29ffd00269098f5e2c8e29c4266a9ee8"
   name = "golang.org/x/tour"
   packages = [
     "pic",
+    "reader",
+    "tree",
     "wc",
   ]
   pruneopts = "UT"
@@ -17,6 +19,8 @@
   analyzer-version = 1
   input-imports = [
     "golang.org/x/tour/pic",
+    "golang.org/x/tour/reader",
+    "golang.org/x/tour/tree",
     "golang.org/x/tour/wc",
   ]
   solver-name = "gps-cdcl"

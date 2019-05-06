@@ -141,7 +141,37 @@ func main() {
 	print(a)
 }
 ```
-其仍能保证`print`打印的是
+其仍能保证`print`打印的是`"hello, world"`. 这是因为对*c*的写入发生在对*c*的读取之前, 而对*c*的读取又在对*c*的写入完成之前发生, 而print发生在对*c*的写入完成之后, 对*a*的赋值操作发生在对*c*的读取之前, 所以对*a*的赋值操作发生在`print`之前, 故肯定会打印`"hello, world". 
+
+如果channel是有缓存的, 比如说` c:= make(chan int, 1)`, 则上述代码不能保证必然打印`"hello, world"`. 程序可能输出空字符串, 崩溃, 或者其他异常行为. 
+
+从无缓冲channel推广到有缓冲channel, 有
+```
+在容量为*C*的channel上的第`k`次读取操作发生在对该channel的第`k + C`次写入完成之前. 
+```
+可以由缓冲channel构建出计数信号量：信道中的项目数量对应于活动使用次数，信道容量对应于最大同时使用次数，发送项目获取信号量，以及 接收项目会释放信号量。 这是限制并发的常用习惯用法。
+
+该程序为工作列表中的每个条目启动一个goroutine，但goroutine使用限制通道进行协调，以确保一次最多有三个正在运行工作函数。
+```
+var limit = make(chan int, 3)
+
+func main() {
+	for _, w := range work {
+		go func(w func()) {
+			limit <- 1
+			w()
+			<-limit
+		}(w)
+	}
+	select{}
+}
+```
+
+### Locks 锁
+`sync`包提供了两种锁, `sync.Mutex`和`sync.RWMutex`. 
+
+### Once
+`sync`包提供了`Once`用于初始化. 
 
 
 
